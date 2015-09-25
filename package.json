@@ -1,0 +1,26 @@
+{
+  "name": "tsdetect",
+  "version": "1.0.0",
+  "description": "A command line tool to detect TypeScript maybe used in your project.",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^2.8.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nabeix/tsdetect"
+  },
+  "keywords": [
+    "TypeScript"
+  ],
+  "author": "Yusuke Watanabe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nabeix/tsdetect/issues"
+  },
+  "homepage": "https://github.com/nabeix/tsdetect"
+}
