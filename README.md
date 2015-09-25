@@ -4,13 +4,15 @@ A command line tool to detect TypeScript maybe used in your project.
 
 ## Install
 
+*TODO: publish as NPM package*
+
 ```
 npm install -g tsdetect
 ```
 
 ## Usage
 
-In your project directory, type `tsdetect` command:
+In your project directory, type `tsdetect` command.
 
 ```
 tsdetect
@@ -24,10 +26,17 @@ npm instal tsdetect --save
 
 ```
 var tsdetect = require('tsdetect');
-detect("/path/to/project");
+tsdetect.detect("/path/to/project", function(error, result) {
+    console.log(result);
+});
 ```
 
 ## How it works
+
+`tsdetect` searches TypeScript using npm command in the following order.
+
+1. in your project directory
+2. in global
 
 ## Contribution
 

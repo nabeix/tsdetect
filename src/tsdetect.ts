@@ -1,51 +1,87 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import path = require("path");
-import fs = require("fs");
+import {exec} from "child_process";
 
-function createJsonPathList(projectPath: string): string[] {
-    var result: string[] = [];
-    var splited = projectPath.split("/");
-    var path = "/";
-    for (var i = 0; i < splited.length; i++) {
-        var d = splited[i];
-        if (!d) continue;
-        path += `${d}/`;
-        result.push(`${path}package.json`);
-    }
-    result.reverse();
-    return result;
+function findLocalTypeScript(projectPath: string): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+        var execResult: string[] = [];
+        var nodeModulePath = "/node_modules/typescript";
+        var tsPath: string = null;
+        exec("npm list typescript --parseable", {cwd: projectPath}, (error, stdout, stderr) => {
+            if (error && (<any>error).code > 125) {
+                reject(new Error("npm command execution error."));
+                return;
+            }
+            var splited = stdout.toString().split("\n");
+            for (var i = 0; i < splited.length; i++) {
+                if (splited[i].indexOf(projectPath) === 0) {
+                    execResult.push(splited[i]);
+                }
+            }
+            if (execResult.length === 1) {
+                tsPath = execResult[0];
+            } else if (execResult.length > 1) {
+                execResult.sort((a: string, b:string) => {
+                    if (a.length < b.length) {
+                        return -1;
+                    }
+                    if (a.length > b.length) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                tsPath = execResult[0];
+            }
+            if (tsPath) {
+                resolve(tsPath);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+    return promise;
 }
 
-
-function findTypeScriptInNodeModules(jsonPath: string): string {
-    var tsPathBase = jsonPath.slice(0, jsonPath.lastIndexOf("/"));
-    var jsonText: string = null;
-    try {
-        jsonText= fs.readFileSync(jsonPath, "utf-8");
-    } catch(e) {
-        return null;
-    }
-    var json = JSON.parse(jsonText);
-    if ("typescript" in json["dependencies"] || "typescript" in json["devDependencies"]) {
-         return tsPathBase + "/node_modules/typescript";
-    }
-    if ("gulp-typescript" in json["dependencies"] || "gulp-typescript" in json["devDependencies"]) {
-        return tsPathBase + "/node_modules/gulp-typescript/node_modules/typescript";
-    }
-    return null;
+function findGlobalTypeScript(): Promise<string> {
+    var promise = new Promise<string>((resolve, reject) => {
+        var execResult: string[] = [];
+        exec("npm list typescript -g --parseable", {}, (error, stdout, stderr) => {
+            if (error && (<any>error).code > 125) {
+                reject(new Error("npm command execution error."));
+                return;
+            }
+            var splited = stdout.toString().split("\n");
+            for (var i = 0; i < splited.length; i++) {
+                if (splited[i]) {
+                    execResult.push(splited[i]);
+                }
+            }
+            if (execResult.length) {
+                resolve(execResult[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+    return promise;
 }
 
-export function detect(projectPath: string): string {
+export function detect(projectPath: string, callback: (err: Error, result?: string) => void): void {
     var absPath = path.resolve(projectPath);
-    var jsonPathList = createJsonPathList(absPath);
-    var tsPath: string = null;
-    for (var i = 0; i < jsonPathList.length; i++) {
-        tsPath = findTypeScriptInNodeModules(jsonPathList[i]);
-        if (tsPath) break;
-    }
-    if (!tsPath) {
-        // TODO:
-    }
-    return tsPath;
+    findLocalTypeScript(absPath).then((tsPath) => {
+        if (tsPath) {
+            return tsPath;
+        } else {
+            return findGlobalTypeScript();
+        }
+    }).then((tsPath) => {
+        if (tsPath) {
+            callback(null, tsPath);
+        } else {
+            callback(new Error("TypeScript not found."));
+        }
+    }).catch((error) => {
+        callback(error);
+    });
 }

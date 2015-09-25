@@ -9,20 +9,20 @@ var projectPath: string = null;
 
 program
     .version(version)
+    .usage("[options] [project-path]")
     .description("A command line tool to detect TypeScript maybe used in your project.")
-    .arguments("[project-path]")
-    .action((path: string) => {
-        projectPath = path;
-    })
     .parse(process.argv);
 
-if (!projectPath) {
+if (program.args.length) {
+    projectPath = program.args[0];
+} else {
     projectPath = process.cwd();
 }
 
-var tsPath = tsdetect.detect(projectPath);
-if (tsPath) {
-    console.log(tsPath);
-} else {
-    console.log("TypeScript not found.");
-}
+tsdetect.detect(projectPath, (err: any, result: string) => {
+    if (err) {
+        console.log(err.message);
+    } else {
+        console.log(result);
+    }
+});
