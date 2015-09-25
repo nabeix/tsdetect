@@ -7,7 +7,7 @@ A command line tool to detect TypeScript maybe used in your project.
 *TODO: publish as NPM package*
 
 ```
-npm install -g tsdetect
+$ npm install -g tsdetect
 ```
 
 ## Usage
@@ -15,13 +15,14 @@ npm install -g tsdetect
 In your project directory, type `tsdetect` command.
 
 ```
-tsdetect
+$ tsdetect
+/Users/nabeix/.nodebrew/current/lib/node_modules/typescript
 ```
 
 ## Use as node module
 
 ```
-npm instal tsdetect --save
+$ npm instal tsdetect --save
 ```
 
 ```
