@@ -7,8 +7,16 @@
     "commander": "^2.8.1"
   },
   "scripts": {
+    "prepublish": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "bin",
+    "lib",
+    "index.js",
+    "package.json",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/nabeix/tsdetect"
