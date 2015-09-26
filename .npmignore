@@ -5,3 +5,4 @@ typings/
 tsconfig.json
 tsd.json
 gulpfile.js
+.travis.yml
