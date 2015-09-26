@@ -1,6 +1,6 @@
 {
   "name": "tsdetect",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A command line tool to detect TypeScript maybe used in your project.",
   "main": "index.js",
   "dependencies": {
@@ -21,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/nabeix/tsdetect/issues"
   },
-  "homepage": "https://github.com/nabeix/tsdetect"
+  "homepage": "https://github.com/nabeix/tsdetect",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "typescript": "^1.6.2"
+  }
 }
