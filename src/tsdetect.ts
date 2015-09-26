@@ -3,6 +3,12 @@
 import path = require("path");
 import {exec} from "child_process";
 
+var targets: string[] = [
+    "node_modules/typescript",
+    "node_modules/gulp-typescript/node_modules/typescript",
+    "node_modules/grunt-typescript/node_modules/typescript"
+];
+
 function findLocalTypeScript(projectPath: string): Promise<string> {
     var promise = new Promise<string>((resolve, reject) => {
         var execResult: string[] = [];
@@ -19,25 +25,14 @@ function findLocalTypeScript(projectPath: string): Promise<string> {
                     execResult.push(splited[i]);
                 }
             }
-            if (execResult.length === 1) {
-                tsPath = execResult[0];
-            } else if (execResult.length > 1) {
-                execResult.sort((a: string, b:string) => {
-                    if (a.length < b.length) {
-                        return -1;
-                    }
-                    if (a.length > b.length) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                tsPath = execResult[0];
+            for (var i = 0; i < targets.length; i++) {
+                var index = execResult.indexOf(path.resolve(`${projectPath}/${targets[i]}`));
+                if (index > -1) {
+                    tsPath = execResult[index];
+                    break;
+                }
             }
-            if (tsPath) {
-                resolve(tsPath);
-            } else {
-                resolve(null);
-            }
+            resolve(tsPath);
         });
     });
     return promise;
@@ -70,11 +65,7 @@ function findGlobalTypeScript(): Promise<string> {
 export function detect(projectPath: string, callback: (err: Error, result?: string) => void): void {
     var absPath = path.resolve(projectPath);
     findLocalTypeScript(absPath).then((tsPath) => {
-        if (tsPath) {
-            return tsPath;
-        } else {
-            return findGlobalTypeScript();
-        }
+        return tsPath ? tsPath : findGlobalTypeScript();
     }).then((tsPath) => {
         if (tsPath) {
             callback(null, tsPath);

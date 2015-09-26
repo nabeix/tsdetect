@@ -4,8 +4,6 @@ A command line tool to detect TypeScript maybe used in your project.
 
 ## Install
 
-*TODO: publish as NPM package*
-
 ```
 $ npm install -g tsdetect
 ```
@@ -27,6 +25,7 @@ $ npm instal tsdetect --save
 
 ```
 var tsdetect = require('tsdetect');
+
 tsdetect.detect("/path/to/project", function(error, result) {
     console.log(result);
 });
@@ -34,10 +33,12 @@ tsdetect.detect("/path/to/project", function(error, result) {
 
 ## How it works
 
-`tsdetect` searches TypeScript using npm command in the following order.
+`tsdetect` tries to detect TypeScript using npm command in the following order.
 
-1. in your project directory
-2. in global
+1. node_modules/typescript
+2. node_modules/gulp-typescript/node_modules/typescript
+3. node_modules/grunt-typescript/node_modules/typescript
+4. global installed
 
 ## Contribution
 
