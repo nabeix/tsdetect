@@ -1,4 +1,4 @@
-# tsdetect [![Build Status](https://travis-ci.org/nabeix/tsdetectsvg?branch=master)](https://travis-ci.org/nabeix/tsdetect)
+# tsdetect [![Build Status](https://travis-ci.org/nabeix/tsdetect.svg?branch=master)](https://travis-ci.org/nabeix/tsdetect)
 
 A command line tool to detect TypeScript maybe used in your project.
 
