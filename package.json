@@ -1,8 +1,11 @@
 {
   "name": "tsdetect",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A command line tool to detect TypeScript maybe used in your project.",
   "main": "index.js",
+  "bin": {
+    "tsdetect": "./bin/tsdetect"
+  },
   "dependencies": {
     "commander": "^2.8.1"
   },
